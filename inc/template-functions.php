@@ -30,3 +30,96 @@ class clean_comments_constructor extends Walker_Comment {
 		$output .= "</li><!-- #comment-## -->\n";
 	}
 }
+
+/**
+ * Обрезка текста (excerpt). Шоткоды вырезаются. Минимальное значение maxchar может быть 22.
+ *
+ * @param (строка/массив) $args Параметры.
+ *
+ * @return HTML
+ * ver 2.6.1
+ */
+function kama_excerpt( $args = '' ){
+	global $post;
+	$default = array(
+		'maxchar'   => 350,   // количество символов.
+		'text'      => '',    // какой текст обрезать (по умолчанию post_excerpt, если нет post_content.
+		// Если есть тег <!--more-->, то maxchar игнорируется и берется все до <!--more--> вместе с HTML
+		'autop'     => true,  // Заменить переносы строк на <p> и <br> или нет
+		'save_tags' => '',    // Теги, которые нужно оставить в тексте, например '<strong><b><a>'
+		'more_text' => 'Читать дальше...', // текст ссылки читать дальше
+	);
+	if( is_array($args) ) $_args = $args;
+	else                  parse_str( $args, $_args );
+	$rg = (object) array_merge( $default, $_args );
+	if( ! $rg->text ) $rg->text = $post->post_excerpt ?: $post->post_content;
+	$rg = apply_filters('kama_excerpt_args', $rg );
+	$text = $rg->text;
+	$text = preg_replace ('~\[/?.*?\](?!\()~', '', $text ); // убираем шоткоды, например:[singlepic id=3], markdown +
+	$text = trim( $text );
+	// <!--more-->
+	if( strpos( $text, '<!--more-->') ){
+		preg_match('/(.*)<!--more-->/s', $text, $mm );
+		$text = trim($mm[1]);
+		$text_append = ' <a href="'. get_permalink( $post->ID ) .'#more-'. $post->ID .'">'. $rg->more_text .'</a>';
+	}
+	// text, excerpt, content
+	else {
+		$text = trim( strip_tags($text, $rg->save_tags) );
+		// Обрезаем
+		if( mb_strlen($text) > $rg->maxchar ){
+			$text = mb_substr( $text, 0, $rg->maxchar );
+			$text = preg_replace('~(.*)\s[^\s]*$~s', '\\1 ...', $text ); // убираем последнее слово, оно 99% неполное
+		}
+	}
+	// Сохраняем переносы строк. Упрощенный аналог wpautop()
+	if( $rg->autop ){
+		$text = preg_replace(
+			array("~\r~", "~\n{2,}~", "~\n~",   '~</p><br ?/>~'),
+			array('',     '</p><p>',  '<br />', '</p>'),
+			$text
+		);
+	}
+	$text = apply_filters('kama_excerpt', $text, $rg );
+	if( isset($text_append) ) $text .= $text_append;
+	return ($rg->autop && $text) ? "<p>$text</p>" : $text;
+}
+/* Подсчет количества посещений страниц
+---------------------------------------------------------- */
+add_action('wp_head', 'kama_postviews');
+function kama_postviews() {
+	/* ------------ Настройки -------------- */
+	$meta_key       = 'views';  // Ключ мета поля, куда будет записываться количество просмотров.
+	$who_count      = 0;            // Чьи посещения считать? 0 - Всех. 1 - Только гостей. 2 - Только зарегистрированных пользователей.
+	$exclude_bots   = 1;            // Исключить ботов, роботов, пауков и прочую нечесть :)? 0 - нет, пусть тоже считаются. 1 - да, исключить из подсчета.
+	global $user_ID, $post;
+	if(is_singular()) {
+		$id = (int)$post->ID;
+		static $post_views = false;
+		if($post_views) return true; // чтобы 1 раз за поток
+		$post_views = (int)get_post_meta($id,$meta_key, true);
+		$should_count = false;
+		switch( (int)$who_count ) {
+			case 0: $should_count = true;
+				break;
+			case 1:
+				if( (int)$user_ID == 0 )
+					$should_count = true;
+				break;
+			case 2:
+				if( (int)$user_ID > 0 )
+					$should_count = true;
+				break;
+		}
+		if( (int)$exclude_bots==1 && $should_count ){
+			$useragent = $_SERVER['HTTP_USER_AGENT'];
+			$notbot = "Mozilla|Opera"; //Chrome|Safari|Firefox|Netscape - все равны Mozilla
+			$bot = "Bot/|robot|Slurp/|yahoo"; //Яндекс иногда как Mozilla представляется
+			if ( !preg_match("/$notbot/i", $useragent) || preg_match("!$bot!i", $useragent) )
+				$should_count = false;
+		}
+		if($should_count)
+			if( !update_post_meta($id, $meta_key, ($post_views+1)) ) add_post_meta($id, $meta_key, 1, true);
+	}
+	return true;
+}
