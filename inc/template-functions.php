@@ -1,4 +1,8 @@
 <?php
+
+//Автоматический title через хук wp_head()
+add_theme_support( 'title-tag' );
+
 // класс, который собирает всю структуру комментов
 class clean_comments_constructor extends Walker_Comment {
 	public function start_lvl( &$output, $depth = 0, $args = array()) { // что выводим перед дочерними комментариями
