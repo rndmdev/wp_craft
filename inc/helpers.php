@@ -1,11 +1,5 @@
 <?php
 
-/*  Корткая функция для ссылок на тему  */
-function scf_path( $url ) {
-
-	return get_stylesheet_directory_uri( $url );
-}
-
 /* ACF link helper */
 function get_field_link( $link, $class = '', $default = 'Learn More', $echo = true ) {
   if ( empty( $link ) && ! is_array( $link ) ) {
