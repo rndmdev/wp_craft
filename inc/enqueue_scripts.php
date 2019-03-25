@@ -13,12 +13,3 @@ function scf_theme_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'scf_theme_scripts' );
 
-/* Отключаем wp-embed */
-function my_deregister_scripts() {
-
-	wp_deregister_script( 'wp-embed' );
-}
-
-add_action( 'init', 'my_deregister_scripts' );
-
-
