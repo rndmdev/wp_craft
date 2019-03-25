@@ -1,93 +1,11 @@
 <?php
 
-//Автоматический title через хук wp_head()
+/* включаем поддержку миниатюр */
+add_theme_support('post-thumbnails');
+
+/* Автоматический title через хук wp_head() */
 add_theme_support( 'title-tag' );
 
-// класс, который собирает всю структуру комментов
-class clean_comments_constructor extends Walker_Comment {
-	public function start_lvl( &$output, $depth = 0, $args = array()) { // что выводим перед дочерними комментариями
-		$output .= '<ul class="children">' . "\n";
-	}
-	public function end_lvl( &$output, $depth = 0, $args = array()) { // что выводим после дочерних комментариев
-		$output .= "</ul><!-- .children -->\n";
-	}
-	protected function comment( $comment, $depth, $args ) { // разметка каждого комментария, без закрывающего </li>!
-		$classes = implode(' ', get_comment_class()).($comment->comment_author_email == get_the_author_meta('email') ? ' author-comment' : ''); // берем стандартные классы комментария и если коммент пренадлежит автору поста добавляем класс author-comment
-		echo '<li id="li-comment-'.get_comment_ID().'" class="'.$classes.'">'."\n"; // родительский тэг комментария с классами выше и уникальным id
-		echo '<div id="comment-'.get_comment_ID().'">'."\n"; // элемент с таким id нужен для якорных ссылок на коммент
-		echo get_avatar($comment, 64)."\n"; // покажем аватар с размером 64х64
-		echo '<p class="meta">Автор: '.get_comment_author()."\n"; // имя автора коммента
-		echo ' '.get_comment_author_email(); // email автора коммента
-		echo ' '.get_comment_author_url(); // url автора коммента
-		echo ' Добавлено '.get_comment_date('F j, Y').' в '.get_comment_time()."\n"; // дата и время комментирования
-		if ( '0' == $comment->comment_approved ) echo '<em class="comment-awaiting-moderation">Ваш комментарий будет опубликован после проверки модератором.</em>'."\n"; // если комментарий должен пройти проверку
-		comment_text()."\n"; // текст коммента
-		$reply_link_args = array( // опции ссылки "ответить"
-			'depth' => $depth, // текущая вложенность
-			'reply_text' => 'Ответить', // текст
-			'login_text' => 'Вы должны быть залогинены' // текст если юзер должен залогинеться
-		);
-		echo get_comment_reply_link(array_merge($args, $reply_link_args)); // выводим ссылку ответить
-		echo '</div>'."\n"; // закрываем див
-	}
-	public function end_el( &$output, $comment, $depth = 0, $args = array() ) { // конец каждого коммента
-		$output .= "</li><!-- #comment-## -->\n";
-	}
-}
-
-/**
- * Обрезка текста (excerpt). Шоткоды вырезаются. Минимальное значение maxchar может быть 22.
- *
- * @param (строка/массив) $args Параметры.
- *
- * @return HTML
- * ver 2.6.1
- */
-function kama_excerpt( $args = '' ){
-	global $post;
-	$default = array(
-		'maxchar'   => 350,   // количество символов.
-		'text'      => '',    // какой текст обрезать (по умолчанию post_excerpt, если нет post_content.
-		// Если есть тег <!--more-->, то maxchar игнорируется и берется все до <!--more--> вместе с HTML
-		'autop'     => true,  // Заменить переносы строк на <p> и <br> или нет
-		'save_tags' => '',    // Теги, которые нужно оставить в тексте, например '<strong><b><a>'
-		'more_text' => 'Читать дальше...', // текст ссылки читать дальше
-	);
-	if( is_array($args) ) $_args = $args;
-	else                  parse_str( $args, $_args );
-	$rg = (object) array_merge( $default, $_args );
-	if( ! $rg->text ) $rg->text = $post->post_excerpt ?: $post->post_content;
-	$rg = apply_filters('kama_excerpt_args', $rg );
-	$text = $rg->text;
-	$text = preg_replace ('~\[/?.*?\](?!\()~', '', $text ); // убираем шоткоды, например:[singlepic id=3], markdown +
-	$text = trim( $text );
-	// <!--more-->
-	if( strpos( $text, '<!--more-->') ){
-		preg_match('/(.*)<!--more-->/s', $text, $mm );
-		$text = trim($mm[1]);
-		$text_append = ' <a href="'. get_permalink( $post->ID ) .'#more-'. $post->ID .'">'. $rg->more_text .'</a>';
-	}
-	// text, excerpt, content
-	else {
-		$text = trim( strip_tags($text, $rg->save_tags) );
-		// Обрезаем
-		if( mb_strlen($text) > $rg->maxchar ){
-			$text = mb_substr( $text, 0, $rg->maxchar );
-			$text = preg_replace('~(.*)\s[^\s]*$~s', '\\1 ...', $text ); // убираем последнее слово, оно 99% неполное
-		}
-	}
-	// Сохраняем переносы строк. Упрощенный аналог wpautop()
-	if( $rg->autop ){
-		$text = preg_replace(
-			array("~\r~", "~\n{2,}~", "~\n~",   '~</p><br ?/>~'),
-			array('',     '</p><p>',  '<br />', '</p>'),
-			$text
-		);
-	}
-	$text = apply_filters('kama_excerpt', $text, $rg );
-	if( isset($text_append) ) $text .= $text_append;
-	return ($rg->autop && $text) ? "<p>$text</p>" : $text;
-}
 /* Подсчет количества посещений страниц
 ---------------------------------------------------------- */
 add_action('wp_head', 'kama_postviews');
