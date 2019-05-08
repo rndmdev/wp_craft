@@ -1,0 +1,71 @@
+.footer
+	padding: 50px 0
+	background-color: #f8f8f8
+	position: relative
+
+	.footer-logo
+		color: #8b9290
+		font-size: 30px
+		line-height: 31px
+		+r(767)
+			margin-bottom: 50px
+
+	.footer-copy
+		color: #1d1d1d
+		font-size: 12px
+		margin-bottom: 50px
+
+	.footer-menu
+		display: flex
+		align-items: center
+		+r(991)
+			margin-bottom: 40px
+		+r(575)
+			flex-direction: column
+			align-items: flex-start
+
+		li
+			font-size: 13px
+
+			&:not(:last-child)
+				margin-right: 50px
+				+r(991)
+					margin-right: 35px
+				+r(575)
+					margin-right: 0
+					margin-bottom: 15px
+
+			a
+				color: #1d1d1d
+
+				&:hover
+					text-decoration: underline
+
+	.footer-dev
+		display: flex
+		flex-direction: column
+		align-items: flex-end
+		font-size: 13px
+		+r(991)
+			flex-direction: row
+
+		a
+			display: inline-block
+			color: #7e9a2b
+			font-weight: 700
+			text-decoration: none
+			margin-left: 5px
+
+			&:hover
+				text-decoration: underline
+
+	&.footer-bottom
+		position: absolute
+		bottom: 0
+		left: 0
+		width: 100%
+
+.header-home
+
+	.footer
+		background-color: #fff

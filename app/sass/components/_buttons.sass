@@ -1,0 +1,94 @@
+.btn-modal-wr
+	text-align: right
+
+.btn,
+.button,
+.swal-button
+	width: 100%
+	padding: 18px 40px
+	color: $color-white
+	font-size: 20px
+	font-weight: 700
+	line-height: 24px
+	text-transform: uppercase
+	text-align: center
+	background-image: linear-gradient(to top, #7c982a 0%, #95b639 100%)
+	background-color: #95b639
+	border: 0
+	border-radius: 30px
+	transition: all .3s ease
+	text-decoration: none
+	cursor: pointer
+
+	&:hover,
+	&:focus,
+	&:active
+		color: $color-white
+		text-shadow: 0 4px 4px rgba(66, 82, 18, 0.5)
+
+.button,
+.swal-button
+	width: auto
+	padding: 9px 25px
+	font-size: 15px
+	line-height: 18px
+	white-space: nowrap
+	outline: none
+
+.swal-button
+	&:hover,
+	&:focus,
+	&:active
+		box-shadow: none
+
+.btn-red
+	background-color: #dd293e
+
+	&:hover,
+	&:focus,
+	&:active
+		color: #fff
+		background-color: #e04759
+
+	i
+		margin-right: 20px
+
+.btn-green
+	background-color: #92b337
+
+	&:hover,
+	&:focus,
+	&:active
+		color: #fff
+		background-color: #aace48
+
+
+#return-to-top
+	position: fixed
+	bottom: 20px
+	left: calc(100% - 60px)
+	width: 39px
+	height: 73px
+	opacity: 0.95
+	background-color: rgba(#ff2424, .75)
+	border-radius: 20px
+	z-index: 5
+	display: none
+	transition: all 0.3s ease
+
+	span
+		display: block
+		margin: 0 auto
+		position: relative
+		width: 21px
+		height: 15px
+		top: 23px
+		background-image: url('../img/btn-top.png')
+		background-repeat: no-repeat
+		transition: all 0.3s ease
+
+	&:hover
+		background-color: #ff2424
+
+		span
+			top: 13px

@@ -1,0 +1,55 @@
+ul.page-numbers
+	padding: 40px 0
+	display: flex
+	justify-content: center
+	align-items: center
+
+	li
+		margin: 0 3px
+
+	a
+		color: #94adba
+		font-size: 14px
+		font-weight: 500
+		text-decoration: none
+
+	.prev,
+	.next
+		position: relative
+
+		&::before,
+		&::after
+			position: absolute
+			content: ''
+			background-color: #94adba
+			width: 10px
+			height: 1px
+
+	.prev
+		padding: 0 45px 0 17px
+
+		&::before
+			transform: rotate(-45deg)
+			top: 6px
+			left: -1px
+
+		&::after
+			transform: rotate(45deg)
+			bottom: 5px
+			left: -1px
+
+	.next
+		padding: 0 17px 0 45px
+
+		&::before
+			transform: rotate(45deg)
+			top: 6px
+			right: -1px
+
+		&::after
+			transform: rotate(-45deg)
+			bottom: 5px
+			right: -1px
+
+	.current
+		color: #143848
