@@ -1,16 +1,20 @@
 <?php get_header(); ?>
-	<section>
-		<h1><?php // заголовок архивов
-			if ( is_day() ) : printf( 'Daily Archives: %s', get_the_date() ); // если по дням
-			elseif ( is_month() ) : printf( 'Monthly Archives: %s', get_the_date( 'F Y' ) ); // если по месяцам
-			elseif ( is_year() ) : printf( 'Yearly Archives: %s', get_the_date( 'Y' ) ); // если по годам
-			else : 'Archives';
-			endif; ?></h1>
-		<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); // если посты есть - запускаем цикл wp ?>
-			<?php get_template_part( 'template-parts/loop' ); // для отображения каждой записи берем шаблон loop.php ?>
-		<?php endwhile; // конец цикла
-		else: echo '<h2>Нет записей.</h2>'; endif; // если записей нет, напишим "простите" ?>
 
-	</section>
-<?php get_sidebar(); ?>
+<h1><?php the_archive_title(); ?></h1>
+
+<?php if ( have_posts() ) {
+	while ( have_posts() ) : the_post(); ?>
+
+		<?php get_template_part( 'template-parts/loop' ); ?>
+
+	<?php endwhile;
+} else {
+	echo "<div class='no-posts'>Пока тут ничего нет. Извините</div>";
+} ?>
+
+
+<?php if ( function_exists( 'pagination' ) ) {
+	pagination();
+} ?>
+
 <?php get_footer(); ?>
