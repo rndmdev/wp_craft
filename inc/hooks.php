@@ -24,3 +24,52 @@ add_action('admin_print_styles-toplevel_page_wpcf7', function () {
     // Инициализация редактора для редактирования шаблона письма
     wp_add_inline_script('code-editor', sprintf('jQuery( function() { wp.codeEditor.initialize( "wpcf7-mail-body", %s ); } );', wp_json_encode($settings)));
 });
+
+add_action('wp_enqueue_scripts', 'wpcf7_modal_invalid_js');
+add_action('wp_footer', 'wpcf7_modal_invalid_js_inline', 999);
+
+/* Поключает библиотеку sweetalert.js для создания красивых модальных окон. */
+function wpcf7_modal_invalid_js()
+{
+
+    wp_enqueue_script('sweetalert', 'https://unpkg.com/sweetalert/dist/sweetalert.min.js');
+}
+
+/* Выводит на экран модальное окно при ошибках валидации формы. */
+function wpcf7_modal_invalid_js_inline()
+{
+
+    ?>
+	<script>
+        // Срабатывает при ошибках валидации формы.
+        document.addEventListener('wpcf7invalid', function (response) {
+            // Запускает модальное окно.
+            swal({
+                title: "Ошибка!",
+                text: response.detail.apiResponse.message,
+                icon: "error",
+                button: "Закрыть"
+            });
+        }, false);
+
+        // Срабатывает при успешной отправке формы.
+        document.addEventListener('wpcf7mailsent', function (response) {
+            // Запускает модальное окно.
+            swal({
+                title: "Спасибо!",
+                text: response.detail.apiResponse.message,
+                icon: "success",
+                button: "Закрыть"
+            });
+        }, false);
+	</script>
+
+	<style>
+		.wpcf7-validation-errors,
+		.wpcf7-mail-sent-ok {
+			display: none !important;
+		}
+	</style>
+    <?php
+
+}
