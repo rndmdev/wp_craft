@@ -17,18 +17,12 @@ body
 	max-width: 100%
 	overflow-x: hidden
 	position: relative
-	min-height: 100vh
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6
-	color: #282736
 	font-weight: 700
-	margin: 25px 0
-	font-family: $font-accent
-	text-transform: uppercase
+	margin: 0 0 25px
 
 h1, .h1
-	display: flex
-	align-items: center
 	font-size: 47px
 	line-height: 46px
 	+r(991)
@@ -37,9 +31,6 @@ h1, .h1
 	+r(767)
 		font-size: 30px
 		line-height: 34px
-
-	i
-		margin: 0 20px 0 0
 
 h2, .h2
 	font-size: 28px
@@ -70,8 +61,7 @@ h6, .h6
 	font-size: 16px
 
 p
-	margin: 25px 0
-	line-height: 24px
+	margin: 0 0 25px
 
 	.alignleft,
 	.alignright
@@ -85,20 +75,15 @@ img
 	height: auto
 
 a
-	display: inline-block
-	font-size: inherit
 	text-decoration: underline
-	outline: none
-	color: $color-hover
 	transition: $transition
 
 	&:hover
 		text-decoration: none
-		color: $color-hover
 
 blockquote
 	padding: 15px 30px
-	margin: 25px 0 25px 27px
+	margin: 0 0 25px 27px
 	position: relative
 	color: #569fd2
 	font-size: 15px
