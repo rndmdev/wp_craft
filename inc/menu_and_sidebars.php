@@ -1,22 +1,23 @@
 <?php
 
-/* Регистрация 2 меню */
+/* Register menus */
 register_nav_menus(
 	array(
 		'top'    => 'Верхнее',
-		'bottom' => 'Внизу',
+		'main'   => 'Главное',
+		'bottom' => 'Нижнее',
 	)
 );
 
-/* Регистрация сайдбара */
+/* Register sidebars */
 register_sidebar(
-	array( // регистрируем левую колонку, этот кусок можно повторять для добавления новых областей для виджитов
-	       'name'          => 'Колонка слева', // Название в админке
-	       'id'            => "left-sidebar", // идентификатор для вызова в шаблонах
-	       'description'   => 'Обычная колонка в сайдбаре', // Описалово в админке
-	       'before_widget' => '<div id="%1$s" class="widget %2$s">', // разметка до вывода каждого виджета
-	       'after_widget'  => "</div>\n", // разметка после вывода каждого виджета
-	       'before_title'  => '<span class="widgettitle">', //  разметка до вывода заголовка виджета
-	       'after_title'   => "</span>\n", //  разметка после вывода заголовка виджета
+	array(
+		'name'          => 'Колонка слева',
+		'id'            => "left-sidebar",
+		'description'   => 'Обычная колонка в сайдбаре',
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget'  => "</div>\n",
+		'before_title'  => '<span class="widgettitle">',
+		'after_title'   => "</span>\n",
 	)
 );
