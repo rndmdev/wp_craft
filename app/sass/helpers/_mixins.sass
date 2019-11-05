@@ -46,15 +46,22 @@
   .no-touch &:hover
     @content
 
-%pseudo
+%pseudo-element
   position: relative
-  &:before,&:after
+  &:before,
+  &:after
     content: ' '
     position: absolute
     top: 0
     left: 0
-=pseudo
-  @extend %pseudo
+=pseudo-element
+  @extend %pseudo-element
+
+=pseudo($element)
+  &::#{$element}
+    content: ' '
+    position: absolute
+    @content
 
 =coverdiv
   position: absolute
@@ -165,9 +172,16 @@
     display: table
     clear: both
 
-
 =placeholder-color($color)
   &::placeholder
+    color: $color
+  &::-webkit-input-placeholder
+    color: $color
+  &::-moz-placeholder
+    color: $color
+  &:-ms-input-placeholder
+    color: $color
+  &:-moz-placeholder
     color: $color
 
 =placeholder
