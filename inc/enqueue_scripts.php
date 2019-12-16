@@ -4,6 +4,7 @@
 function scf_theme_scripts() {
 
 	// Подключаем стили
+	//wp_enqueue_style( 'fontawesome-style', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css' );
 	wp_enqueue_style( 'main-style', THEME_CSS . 'main.css' );
 	wp_enqueue_style( 'wp-style', get_stylesheet_uri() );
 
