@@ -1,55 +1,102 @@
-ul.page-numbers
-	padding: 40px 0
-	display: flex
-	justify-content: center
-	align-items: center
+.pagination
+	padding: 20px 0
+	display: block
+
+	ul
+		padding: 0
+		margin: 0
+		display: flex
+		justify-content: center
+		align-items: center
+		list-style-type: none
 
 	li
-		margin: 0 3px
+		display: inline-block
+		height: 31px
+		text-align: center
 
-	a
-		color: #94adba
-		font-size: 14px
-		font-weight: 500
+	a,
+	span
+		display: block
+		width: 31px
+		height: 100%
+		color: $color-black
+		font-size: 22px
+		font-weight: 700
+		border-radius: 4px
 		text-decoration: none
-
-	.prev,
-	.next
+		margin: 0 1px
 		position: relative
 
-		&::before,
-		&::after
-			position: absolute
-			content: ''
-			background-color: #94adba
-			width: 10px
-			height: 1px
+		&:not(.prev),
+		&:not(.next)
+			display: inline-block
+			font-size: 18px
+			line-height: 31px
+			+r(550)
+				width: 30px
+				font-size: 24px
+			+r(430)
+				width: 25px
+				font-size: 22px
 
-	.prev
-		padding: 0 45px 0 17px
+	a
 
-		&::before
-			transform: rotate(-45deg)
-			top: 6px
-			left: -1px
+		&:hover
+			color: #fff
+			background-color: $color-accent
+			text-decoration: none
 
-		&::after
-			transform: rotate(45deg)
-			bottom: 5px
-			left: -1px
+		&.prev,
+		&.next
 
-	.next
-		padding: 0 17px 0 45px
+			&::before,
+			&::after
+				position: absolute
+				content: ''
+				width: 10px
+				height: 3px
+				left: 50%
+				background-color: $color-black
 
-		&::before
-			transform: rotate(45deg)
-			top: 6px
-			right: -1px
+			&::before
+				top: 15px
 
-		&::after
-			transform: rotate(-45deg)
-			bottom: 5px
-			right: -1px
+			&::after
+				top: 10px
+
+			&:hover
+				color: #fff
+				background-color: $color-accent
+				border-bottom: 0
+				box-shadow: none
+
+				&::before,
+				&::after
+					background-color: #fff
+
+		&.prev
+
+			&::before
+				transform: translateX(-50%) rotate(45deg)
+
+			&::after
+				transform: translateX(-50%) rotate(-45deg)
+
+		&.next
+
+			&::before
+				transform: translateX(-50%) rotate(-45deg)
+
+			&::after
+				transform: translateX(-50%) rotate(45deg)
+
+		&.prev span,
+		&.next span
+			display: none
 
 	.current
-		color: #143848
+		color: #fff
+		text-decoration: none
+		font-weight: 700
+		background-color: $color-accent
